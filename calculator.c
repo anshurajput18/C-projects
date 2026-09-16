@@ -18,5 +18,5 @@ int main(){
         printf("\n7. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
-    } while (choice != 7);
+    } while (choice != 6);
 }
