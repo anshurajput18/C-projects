@@ -106,12 +106,44 @@ void deposit_amount()
             return;
     }
 }
+fclose(file);
+printf("\nAccount no:%d was not found.\n", acc_no);
 }
 void withdraw_amount()
 {
-    printf("\nEnter amount to withdraw: ");
+     FILE *file = fopen(ACCOUNT_FILE, "rb+");
+    if (file == NULL)
+    {
+        printf("\nError opening file.\n");
+        return;
+    }
+
+    int acc_no;
     float amount;
+    Account acc_r;
+    printf("\nEnter your account number: ");
+    scanf("%d", &acc_no);
+    printf("\nEnter amount to withdraw: ");
     scanf("%f", &amount);
+
+    while(fread(&acc_r, sizeof(Account),1,file)){
+        if (acc_r.acc_no == acc_no){
+            if (acc_r.balance >= amount)
+            {
+                acc_r.balance -= amount;
+                fseek(file, -sizeof(Account), SEEK_CUR);
+                fwrite(&acc_r, sizeof(Account), 1, file);
+                printf("\nAmount withdrawn successfully. New balance: %.2f\n", acc_r.balance);
+            }else
+            {
+                printf("\nInsufficient balance. Current balance: %.2f\n", acc_r.balance);
+            }
+            fclose(file);
+            return;
+    }
+}
+fclose(file);
+printf("\nAccount no:%d was not found.\n", acc_no);
 }
 void check_balance()
 {
